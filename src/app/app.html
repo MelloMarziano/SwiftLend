@@ -1,0 +1,197 @@
+<div class="min-h-screen bg-slate-50 text-slate-900 flex flex-col md:flex-row antialiased">
+
+  <!-- Mobile Top Header (only visible on small screens) -->
+  <header class="no-print md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+        SL
+      </div>
+      <div>
+        <span class="font-extrabold text-slate-900 text-base tracking-tight">SwiftLend</span>
+        <span class="block text-[9px] text-emerald-700 font-mono uppercase tracking-widest font-bold">Motor SwiftALGO</span>
+      </div>
+    </div>
+
+    <button 
+      (click)="mobileMenuOpen.set(!mobileMenuOpen())"
+      class="p-2 text-slate-700 hover:text-slate-900 rounded-lg bg-slate-100 border border-slate-200">
+      <span class="material-icons-outlined text-xl">{{ mobileMenuOpen() ? 'close' : 'menu' }}</span>
+    </button>
+  </header>
+
+  <!-- Sidebar Navigation (Desktop fixed 260px & Mobile Overlay) -->
+  <aside 
+    [class]="mobileMenuOpen() ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+    class="no-print fixed md:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between transition-transform duration-300 ease-in-out shrink-0 shadow-xs">
+    
+    <div class="p-6 space-y-6 overflow-y-auto">
+      <!-- Brand Lockup -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md shadow-emerald-900/10">
+          SL
+        </div>
+        <div>
+          <a href="#" (click)="$event.preventDefault()" class="text-lg font-extrabold tracking-tight text-slate-900 whitespace-nowrap block">
+            SwiftLend
+          </a>
+          <span class="text-[10px] text-emerald-700 font-mono uppercase tracking-wider block font-bold">
+            Motor SwiftALGO
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation Section -->
+      <nav class="space-y-1 text-sm font-medium">
+        <!-- Panel Principal -->
+        <button 
+          (click)="setTab('dashboard')"
+          [class]="loanService.activeTab() === 'dashboard' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3">
+          <span class="material-icons-outlined text-lg text-emerald-600">dashboard</span>
+          <span>Panel Principal</span>
+        </button>
+
+        <!-- Clientes -->
+        <button 
+          (click)="setTab('clients')"
+          [class]="loanService.activeTab() === 'clients' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3">
+          <span class="material-icons-outlined text-lg text-emerald-600">people</span>
+          <span>Clientes & Perfiles</span>
+        </button>
+
+        <!-- Calculadora & Amortización -->
+        <button 
+          (click)="setTab('calculator')"
+          [class]="loanService.activeTab() === 'calculator' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3">
+          <span class="material-icons-outlined text-lg text-emerald-600">calculate</span>
+          <span>Calculadora & Amortización</span>
+        </button>
+
+        <!-- Préstamos Emitidos -->
+        <button 
+          (click)="setTab('loans')"
+          [class]="loanService.activeTab() === 'loans' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="material-icons-outlined text-lg text-emerald-600">request_quote</span>
+            <span>Cartera de Préstamos</span>
+          </div>
+          <span class="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full border border-slate-200">
+            {{ loanService.loans().length }}
+          </span>
+        </button>
+
+        <!-- Reportes de Morosidad -->
+        <button 
+          (click)="setTab('delinquency')"
+          [class]="loanService.activeTab() === 'delinquency' ? 'bg-rose-50 text-rose-800 border border-rose-200 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="material-icons-outlined text-lg text-rose-600">warning_amber</span>
+            <span>Reporte Morosidad</span>
+          </div>
+          @if (loanService.overdueCount() > 0) {
+            <span class="text-xs font-mono font-bold bg-rose-100 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-full">
+              {{ loanService.overdueCount() }}
+            </span>
+          }
+        </button>
+
+        <!-- Contrato Personalizado -->
+        <button 
+          (click)="setTab('contract')"
+          [class]="loanService.activeTab() === 'contract' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3">
+          <span class="material-icons-outlined text-lg text-emerald-600">description</span>
+          <span>Contrato de Pago</span>
+        </button>
+
+        <!-- Historial de Pagos -->
+        <button 
+          (click)="setTab('payments')"
+          [class]="loanService.activeTab() === 'payments' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3">
+          <span class="material-icons-outlined text-lg text-emerald-600">receipt_long</span>
+          <span>Registro de Cobros</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="p-4 border-t border-slate-200/80 bg-slate-50/50 space-y-2">
+      <div class="flex items-center gap-2 text-xs text-slate-600">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span class="font-mono text-[11px] font-semibold text-slate-700">Sistema Operativo · SwiftALGO</span>
+      </div>
+      <div class="text-[11px] text-slate-500 leading-tight">
+        Frecuencias variables: Diarias, Semanales, Quincenales, Mensuales.
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <!-- Top Header Bar (Desktop & Tablet) -->
+    <header class="no-print hidden md:flex items-center justify-between px-8 py-4 bg-white/90 border-b border-slate-200/80 sticky top-0 z-30 backdrop-blur shadow-xs">
+      <!-- Breadcrumb & Date -->
+      <div class="flex items-center gap-3 text-xs text-slate-500">
+        <span class="font-bold text-slate-900 uppercase tracking-wider font-mono">SwiftLend</span>
+        <span>/</span>
+        <span class="text-emerald-700 capitalize font-semibold">{{ todayFormatted }}</span>
+      </div>
+
+      <!-- Actions & Currency Config Switcher -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl text-xs">
+          <span class="material-icons-outlined text-sm text-emerald-600">monetization_on</span>
+          <span class="text-slate-600 font-medium">Moneda:</span>
+          <select 
+            [value]="loanService.selectedCurrency().code"
+            (change)="onCurrencyChange($event)"
+            class="bg-transparent text-slate-900 font-bold font-mono focus:outline-none cursor-pointer">
+            @for (curr of getAvailableCurrencies(); track curr.code) {
+              <option [value]="curr.code" class="bg-white text-slate-900 font-sans">{{ curr.name }}</option>
+            }
+          </select>
+        </div>
+
+        <button 
+          (click)="setTab('loans')"
+          class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1">
+          <span class="material-icons-outlined text-base">add</span>
+          Nuevo Crédito
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Viewport -->
+    <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
+      @switch (loanService.activeTab()) {
+        @case ('dashboard') {
+          <app-dashboard></app-dashboard>
+        }
+        @case ('clients') {
+          <app-clients></app-clients>
+        }
+        @case ('calculator') {
+          <app-calculator></app-calculator>
+        }
+        @case ('loans') {
+          <app-loans></app-loans>
+        }
+        @case ('delinquency') {
+          <app-delinquency></app-delinquency>
+        }
+        @case ('contract') {
+          <app-contract></app-contract>
+        }
+        @case ('payments') {
+          <app-payments></app-payments>
+        }
+      }
+    </main>
+  </div>
+
+</div>

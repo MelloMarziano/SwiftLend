@@ -1,0 +1,6 @@
+{
+  "name": "SwiftLend",
+  "description": "Sistema inteligente de gestión de préstamos por SwiftALGO: cálculo de amortización variable (diaria, semanal, quincenal, mensual), contrato de pago personalizado automático con firma y reportes de morosidad en tiempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
