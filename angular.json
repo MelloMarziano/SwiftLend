@@ -59,6 +59,30 @@
               "externalDependencies": [
                 "@google/genai"
               ]
+            },
+            "pages": {
+              "outputMode": "static",
+              "ssr": false,
+              "baseHref": "/SwiftLend/",
+              "outputHashing": "all",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.pages.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
